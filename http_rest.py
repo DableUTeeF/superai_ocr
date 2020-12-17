@@ -3,9 +3,40 @@ import numpy as np
 import cv2
 import pytesseract
 import easyocr
+from fuzzywuzzy import process
+import re
 
 app = Flask(__name__)
 reader = easyocr.Reader(['en'])
+months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
+months_to_num = {"ม.ค.": 1, "ก.พ.": 2, "มี.ค.": 3, "เม.ย.": 4, "พ.ค.": 5, "มิ.ย.": 6,
+                 "ก.ค.": 7, "ส.ค.": 8, "ก.ย.": 9, "ต.ค.": 10, "พ.ย.": 11, "ธ.ค.": 12}
+similarToNum = {"A": '4', "B": '3', "C": '0', "D": '0', "E": '8', "F": '', "G": '0',
+                "H": '5', "I": '1', "J": '1', "K": '',
+                "L": '1', "M": '', "N": '', "O": '0', "P": '0', "Q": '0', "R": '0', "S": '5', "T": '', "U": '0',
+                "V": '0', "W": '',
+                "X": "", "Y": '1', "Z": '2', "a": '0', "b": '0', "c": '0', "d": '0', "e": '0', "f": '1', "g": '8',
+                "h": '5', "i": '1', "j": '1',
+                "k": '8', "l": '1', "m": '', "n": '0', "o": '0', "p": '9', "q": '9', "r": '1', "s": '5', "t": '1',
+                "u": '0', "v": '0', "w": '',
+                "x": '', "y": '', "z": '2', "$": '0', "!": '1', "@": '8', "§": '0', "=": '9', '_': ''}
+
+
+def findMonth(str2Match):
+    ratios = process.extract(str2Match, months)
+    closest = process.extractOne(str2Match, months)
+    return closest[0]
+
+
+def mapToNum(string):
+    final_str = ""
+    for s in string:
+        try:
+            to_num = similarToNum[s]
+            final_str = final_str + to_num
+        except:
+            final_str = final_str + s
+    return final_str
 
 
 def get_prediction(image_bytes):
@@ -41,6 +72,7 @@ def get_prediction(image_bytes):
             word = result[1]
             if len(word) > len(selected_id):
                 selected_id = word
+    selected_id = mapToNum(selected_id)
 
     im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2HSV)
     low_red = np.array([100, 80, 90])
@@ -50,13 +82,26 @@ def get_prediction(image_bytes):
     thai_date = pytesseract.image_to_string(im2, lang='tha')
     eng_date = pytesseract.image_to_string(im2)
     splitted_eng = eng_date.split(' ')
-    selected_day = splitted_eng[-3]
-    selected_month = thai_date.split(' ')[-2]
-    selected_year = splitted_eng[-1]
+    splitted_thai = thai_date.split(' ')
+    try:
+        selected_day = mapToNum(splitted_eng[-3])
+        selected_day = re.sub("[^0-9]", "", selected_day)
+    except:
+        selected_day = 9
+    if len(splitted_thai) < 3:
+        splitted_thai = ['ม.ค.', '', '']
+    try:
+        selected_month = months_to_num[findMonth(splitted_thai[-2])]
+    except:
+        selected_month = 1
+    selected_year = mapToNum(splitted_eng[-1])
+    selected_year = re.sub("[^0-9]", "", selected_year)
+    selected_year = ''.join(['25', selected_year[2], selected_year[3]])
 
-    output = {'revieve_id': selected_id, 'thai_date': thai_date,
-              'eng_date': eng_date,
-              'selected_date': f'{selected_day} {selected_month} {selected_year}'}
+    output = {'revieve_id': selected_id,
+              # 'thai_date': thai_date,
+              # 'eng_date': eng_date,
+              'recieve_date': f'{selected_day} {selected_month} {selected_year}'}
     return output
 
 
