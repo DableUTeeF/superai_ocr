@@ -3,13 +3,14 @@ import os
 import pytesseract
 import numpy as np
 import easyocr
+from fuzzywuzzy import process
+
 reader = None
+months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."]
 
 if __name__ == '__main__':
     root = 'redstamp'
     for file in os.listdir(root):
-        if '187' not in file:
-            continue
 
         raw_image = cv2.imread(os.path.join(root, file))
         cv2.imshow('ori', raw_image)
@@ -78,3 +79,11 @@ if __name__ == '__main__':
         cv2.imshow('1', im1)
         cv2.imshow('2', im2)
         cv2.waitKey()
+
+def findMonth(str2Match):
+
+  Ratios = process.extract(str2Match,months)
+  print(Ratios)
+
+  closest = process.extractOne(str2Match,months)
+  return(closest[0])
