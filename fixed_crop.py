@@ -7,6 +7,29 @@ from fuzzywuzzy import process
 
 reader = None
 months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."]
+similarToNum = {"A":'4',"B":'3',"C":'0',"D":'0',"E":'8',"F": '',"G":'0',"H":'5',"I":'1',"J":'1',"K":'',
+            "L":'1',"M":'',"N":'',"O":'0',"P":'0',"Q":'0',"R":'0',"S":'5',"T":'1',"U":'0',"V":'0',"W":'',
+            "X":"","Y":'1',"Z":'2',"a":'0',"b":'0',"c":'0',"d":'0',"e":'0',"f":'1',"g":'8',"h":'5',"i":'1',"j":'1',
+            "k":'8',"l":'1',"m":'',"n":'0',"o":'0',"p":'9',"q":'9',"r": '1',"s":'5',"t":'1',"u":'0',"v":'0',"w":'',
+            "x":'',"y":'',"z":'2',"$":'0',"!":'1',"@":'8',"§":'0'}
+
+def findMonth(str2Match):
+
+  Ratios = process.extract(str2Match,months)
+  print(Ratios)
+
+  closest = process.extractOne(str2Match,months)
+  return(closest[0])
+
+def mapToNum(str):
+  final_str = ""
+  for s in str:
+    try:
+      to_num = similarToNum[s]
+      final_str = final_str + to_num
+    except:
+      final_str = final_str + s
+  return final_str
 
 if __name__ == '__main__':
     root = 'redstamp'
@@ -64,9 +87,9 @@ if __name__ == '__main__':
         # im2 = 255-cv2.morphologyEx(255-im2, cv2.MORPH_CLOSE, k)
         thai_date = pytesseract.image_to_string(im2, lang='tha').split('\n')[0].split(' ')
         eng_date = pytesseract.image_to_string(im2).split('\n')[0].split(' ')
-        selected_day = eng_date[-3]
-        selected_month = thai_date[-2]
-        selected_year = eng_date[-1]
+        selected_day = mapToNum(eng_date[-3])
+        selected_month = findMonth(thai_date[-2])
+        selected_year = mapToNum(eng_date[-1])
         # selected_year = selected_year.replace('\n', '')
         # selected_year = selected_year.replace('\f', '')
         print(f'{selected_day} {selected_month} {selected_year}')
@@ -79,11 +102,3 @@ if __name__ == '__main__':
         cv2.imshow('1', im1)
         cv2.imshow('2', im2)
         cv2.waitKey()
-
-def findMonth(str2Match):
-
-  Ratios = process.extract(str2Match,months)
-  print(Ratios)
-
-  closest = process.extractOne(str2Match,months)
-  return(closest[0])
