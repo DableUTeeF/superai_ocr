@@ -12,15 +12,16 @@ if __name__ == '__main__':
         #     continue
 
         raw_image = cv2.imread(os.path.join(root, file))
-
+        cv2.imshow('ori', raw_image)
         image = raw_image.copy()
         # image[image[..., 2] > 100] = 255
         # image[image[..., 2] < 100] = 0
 
         height = image.shape[0]
         width = image.shape[1]
-        im1 = image[int(height/3.2):int(height/1.75), int(width*0.25):]
-        # cv2.imshow('color', im1)
+        im1 = image[int(height/3.2):int(height/1.75), int(width*0.25):].copy()
+        im2 = image[height//2:int(height/1.25)].copy()
+        cv2.imshow('color1', im1)
         im1[im1[..., 2] > 100] = 255
         im1[im1[..., 0] > 100] = 255
         im1[im1[..., 2] < 100] = 0
@@ -52,7 +53,6 @@ if __name__ == '__main__':
         print(selected_id)
 
         # cv2.imshow('1', im1)
-        im2 = image[height//2:int(height/1.25)]
         cv2.imshow('color2', im2)
         im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2HSV)
         low_red = np.array([100, 80, 90])
@@ -66,6 +66,8 @@ if __name__ == '__main__':
         selected_day = eng_date[-3]
         selected_month = thai_date[-2]
         selected_year = eng_date[-1]
+        selected_year = selected_year.replace('\n', '')
+        selected_year = selected_year.replace('\f', '')
         print(f'{selected_day} {selected_month} {selected_year}')
 
         # print(pytesseract.image_to_string(im2, lang='tha').split('\n')[0])
@@ -73,5 +75,6 @@ if __name__ == '__main__':
         # print(pytesseract.image_to_string(im2, lang='tha').split('\n')[0])
         # print(pytesseract.image_to_string(im2).split('\n')[0])
         print()
+        cv2.imshow('1', im1)
         cv2.imshow('2', im2)
         cv2.waitKey()
