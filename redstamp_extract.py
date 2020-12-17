@@ -7,6 +7,7 @@ import pytesseract
 import easyocr
 from fuzzywuzzy import process
 import re
+import json
 
 reader = easyocr.Reader(['en'])
 months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
@@ -104,8 +105,8 @@ def get_prediction(image_bytes):
     output = {'revieve_id': selected_id,
               # 'thai_date': thai_date,
               # 'eng_date': eng_date,
-              'recieve_date': f'{selected_day} {selected_month} {selected_year}'}
-    return output
+              'recieve_date': f'{selected_day}/{selected_month}/{selected_year}'}
+    return json.dumps(output)
 
 
 parser = argparse.ArgumentParser(description='Extract recieve id and recieve date from cropped stamp')
