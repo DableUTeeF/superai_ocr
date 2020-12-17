@@ -62,13 +62,13 @@ if __name__ == '__main__':
         im2 = 255-cv2.cvtColor(blue_mask, cv2.COLOR_GRAY2BGR)
         # im2 = 255-cv2.morphologyEx(im2, cv2.MORPH_CLOSE, k)
         # im2 = 255-cv2.morphologyEx(255-im2, cv2.MORPH_CLOSE, k)
-        thai_date = pytesseract.image_to_string(im2, lang='tha').split(' ')
-        eng_date = pytesseract.image_to_string(im2).split(' ')
+        thai_date = pytesseract.image_to_string(im2, lang='tha').split('\n')[0].split(' ')
+        eng_date = pytesseract.image_to_string(im2).split('\n')[0].split(' ')
         selected_day = eng_date[-3]
         selected_month = thai_date[-2]
         selected_year = eng_date[-1]
-        selected_year = selected_year.replace('\n', '')
-        selected_year = selected_year.replace('\f', '')
+        # selected_year = selected_year.replace('\n', '')
+        # selected_year = selected_year.replace('\f', '')
         print(f'{selected_day} {selected_month} {selected_year}')
 
         # print(pytesseract.image_to_string(im2, lang='tha').split('\n')[0])

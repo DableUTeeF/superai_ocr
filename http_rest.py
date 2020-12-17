@@ -49,7 +49,14 @@ def get_prediction(image_bytes):
     im2 = 255 - cv2.cvtColor(blue_mask, cv2.COLOR_GRAY2BGR)
     thai_date = pytesseract.image_to_string(im2, lang='tha')
     eng_date = pytesseract.image_to_string(im2)
-    output = {'revieve_id': selected_id, 'thai_date': thai_date, 'eng_date': eng_date}
+    splitted_eng = eng_date.split(' ')
+    selected_day = splitted_eng[-3]
+    selected_month = thai_date.split(' ')[-2]
+    selected_year = splitted_eng[-1]
+
+    output = {'revieve_id': selected_id, 'thai_date': thai_date,
+              'eng_date': eng_date,
+              'selected_date': f'{selected_day} {selected_month} {selected_year}'}
     return output
 
 
