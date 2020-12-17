@@ -1,6 +1,4 @@
-import io
 from flask import Flask, jsonify, request
-from PIL import Image
 import numpy as np
 import cv2
 import pytesseract
@@ -11,8 +9,8 @@ reader = easyocr.Reader(['en'])
 
 
 def get_prediction(image_bytes):
-    image = Image.open(io.BytesIO(image_bytes))
-    image = np.array(image)[..., ::-1]
+    nparr = np.fromstring(image_bytes, np.uint8)
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     height = image.shape[0]
     width = image.shape[1]
     im1 = image[int(height / 3.2):int(height / 1.75), int(width * 0.25):].copy()
