@@ -2,4 +2,4 @@ fuzzywuzzy
 numpy
 easyocr
 pytesseract
-opencv
+opencv-python
