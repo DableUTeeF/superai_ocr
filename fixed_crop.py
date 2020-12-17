@@ -8,8 +8,8 @@ reader = None
 if __name__ == '__main__':
     root = 'redstamp'
     for file in os.listdir(root):
-        # if '131' not in file:
-        #     continue
+        if '187' not in file:
+            continue
 
         raw_image = cv2.imread(os.path.join(root, file))
         cv2.imshow('ori', raw_image)

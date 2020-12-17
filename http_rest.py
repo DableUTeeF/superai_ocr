@@ -47,14 +47,10 @@ def get_prediction(image_bytes):
     high_red = np.array([130, 255, 255])
     blue_mask = cv2.inRange(im2, low_red, high_red)
     im2 = 255 - cv2.cvtColor(blue_mask, cv2.COLOR_GRAY2BGR)
-    thai_date = pytesseract.image_to_string(im2, lang='tha').split(' ')
-    eng_date = pytesseract.image_to_string(im2).split(' ')
-    selected_day = eng_date[-3]
-    selected_month = thai_date[-2]
-    selected_year = eng_date[-1]
-    selected_year = selected_year.replace('\n', '')
-    selected_year = selected_year.replace('\f', '')
-    return selected_id, f'{selected_day} {selected_month} {selected_year}'
+    thai_date = pytesseract.image_to_string(im2, lang='tha')
+    eng_date = pytesseract.image_to_string(im2)
+    output = {'revieve_id': selected_id, 'thai_date': thai_date, 'eng_date': eng_date}
+    return output
 
 
 @app.route('/ocr/redstamp', methods=['POST'])
@@ -62,8 +58,8 @@ def predict():
     if request.method == 'POST':
         file = request.files['file']
         img_bytes = file.read()
-        selected_id, selected_date = get_prediction(image_bytes=img_bytes)
-        return jsonify({'recieve_id': selected_id, 'recieve_date': selected_date})
+        output = get_prediction(image_bytes=img_bytes)
+        return jsonify(output)
 
 
 if __name__ == '__main__':
