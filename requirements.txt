@@ -1,0 +1,5 @@
+fuzzywuzzy
+numpy
+easyocr
+pytesseract
+opencv
