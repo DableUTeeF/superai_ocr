@@ -75,7 +75,7 @@ def get_prediction(image_bytes):
             if len(word) > len(selected_id):
                 selected_id = word
     selected_id = mapToNum(selected_id)
-    selected_id = int(re.sub("[^0-9]", "", selected_id))
+    selected_id = re.sub("[^0-9]", "", selected_id)
 
     im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2HSV)
     low_red = np.array([100, 80, 90])
