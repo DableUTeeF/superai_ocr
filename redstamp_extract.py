@@ -9,7 +9,6 @@ from fuzzywuzzy import process
 import re
 import json
 
-reader = easyocr.Reader(['en'])
 months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
 months_to_num = {"ม.ค.": 1, "ก.พ.": 2, "มี.ค.": 3, "เม.ย.": 4, "พ.ค.": 5, "มิ.ย.": 6,
                  "ก.ค.": 7, "ส.ค.": 8, "ก.ย.": 9, "ต.ค.": 10, "พ.ย.": 11, "ธ.ค.": 12}
@@ -69,6 +68,7 @@ def get_prediction(image_bytes):
             if len(word) > len(selected_id):
                 selected_id = word
     if len(selected_id) == 0:
+        reader = easyocr.Reader(['en'])
         res = reader.recognize(im1)
         for result in res:
             word = result[1]
