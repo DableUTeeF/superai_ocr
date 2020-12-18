@@ -75,6 +75,7 @@ def get_prediction(image_bytes):
             if len(word) > len(selected_id):
                 selected_id = word
     selected_id = mapToNum(selected_id)
+    selected_id = int(re.sub("[^0-9]", "", selected_id))
 
     im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2HSV)
     low_red = np.array([100, 80, 90])
@@ -87,13 +88,13 @@ def get_prediction(image_bytes):
     splitted_thai = thai_date.split(' ')
     try:
         selected_day = mapToNum(splitted_eng[-3])
-        selected_day = re.sub("[^0-9]", "", selected_day)
+        selected_day = int(re.sub("[^0-9]", "", selected_day))
     except:
         selected_day = 9
     if selected_day == 0:
         selected_day = 8
     if selected_day > 31:
-        selected_day = int(str(selected_day[0]))
+        selected_day = int(str(selected_day)[0])
     if selected_day < 0:  # unlikely but just in case
         selected_day *= -1
     if len(splitted_thai) < 3:
