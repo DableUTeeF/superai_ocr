@@ -40,7 +40,7 @@ def mapToNum(string):
     return final_str
 
 
-def get_prediction(image_bytes):
+def get_prediction(image_bytes, tesseract_lang):
     nparr = np.fromstring(image_bytes, np.uint8)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     height = image.shape[0]
@@ -62,7 +62,7 @@ def get_prediction(image_bytes):
         if len(word) > len(selected_id):
             selected_id = word
     if len(selected_id) == 0:
-        tha_id = pytesseract.image_to_data(im1, lang='tha', output_type='dict')
+        tha_id = pytesseract.image_to_data(im1, lang=tesseract_lang, output_type='dict')
         for i in range(len(tha_id['text'])):
             word = tha_id['text'][i]
             if len(word) > len(selected_id):
@@ -82,7 +82,7 @@ def get_prediction(image_bytes):
     high_red = np.array([130, 255, 255])
     blue_mask = cv2.inRange(im2, low_red, high_red)
     im2 = 255 - cv2.cvtColor(blue_mask, cv2.COLOR_GRAY2BGR)
-    thai_date = pytesseract.image_to_string(im2, lang='tha')
+    thai_date = pytesseract.image_to_string(im2, lang=tesseract_lang)
     eng_date = pytesseract.image_to_string(im2)
     splitted_eng = eng_date.split(' ')
     splitted_thai = thai_date.split(' ')
@@ -118,10 +118,11 @@ def get_prediction(image_bytes):
 
 parser = argparse.ArgumentParser(description='Extract recieve id and recieve date from cropped stamp')
 parser.add_argument('path', type=str)
+parser.add_argument('-t', default='tha', type=str)
 
 if __name__ == '__main__':
     args = parser.parse_args()
     try:
-        print(get_prediction(open(args.path, 'rb').read()))
+        print(get_prediction(open(args.path, 'rb').read(), args.t))
     except:
         print(json.dumps({'receive_id': '', 'receive_date': ''}))
