@@ -102,10 +102,10 @@ def get_prediction(image_bytes):
         selected_year = ''.join(['25', selected_year[2], selected_year[3]])
     except:
         selected_year = 2563
-    output = {'revieve_id': selected_id,
+    output = {'receive_id': selected_id,
               # 'thai_date': thai_date,
               # 'eng_date': eng_date,
-              'recieve_date': f'{selected_day}/{selected_month}/{selected_year}'}
+              'receive_date': f'{selected_day}/{selected_month}/{selected_year}'}
     return json.dumps(output)
 
 
