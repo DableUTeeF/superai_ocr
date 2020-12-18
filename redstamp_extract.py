@@ -90,6 +90,8 @@ def get_prediction(image_bytes):
         selected_day = re.sub("[^0-9]", "", selected_day)
     except:
         selected_day = 9
+    if selected_day == 0:
+        selected_day = 8
     if len(splitted_thai) < 3:
         splitted_thai = ['ม.ค.', '', '']
     try:

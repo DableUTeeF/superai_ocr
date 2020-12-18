@@ -72,7 +72,7 @@ def getrot(cvimg, padding=0, prerot=0, scale=0.5):
 if __name__ == '__main__':
     root = 'redstamp'
     for file in os.listdir(root):
-        if '133' not in file:
+        if '140' not in file:
             continue
 
         raw_image = cv2.imread(os.path.join(root, file))
