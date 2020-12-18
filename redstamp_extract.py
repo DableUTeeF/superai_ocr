@@ -121,4 +121,7 @@ parser.add_argument('path', type=str)
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    print(get_prediction(open(args.path, 'rb').read()))
+    try:
+        print(get_prediction(open(args.path, 'rb').read()))
+    except:
+        print(json.dumps({'receive_id': '', 'receive_date': ''}))
