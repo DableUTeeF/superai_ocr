@@ -40,7 +40,7 @@ def mapToNum(string):
     return final_str
 
 
-def get_prediction(image_bytes, tesseract_lang):
+def get_prediction(image_bytes, tesseract_lang):  # todo: this
     nparr = np.fromstring(image_bytes, np.uint8)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     height = image.shape[0]
